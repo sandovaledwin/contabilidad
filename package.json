@@ -1,0 +1,22 @@
+{
+  "name": "excel_parser",
+  "version": "0.0.1",
+  "description": "This a NodeJS program for parsing a excel file and exporting the data in JSON format",
+  "main": "main.js",
+  "scripts": {
+    "start":  "node main.js",
+    "report": "node totales.js",
+    "modules": "npm install"
+  },
+  "keywords": [
+    "excel",
+    "parser",
+    "nodejs",
+    "javascript"
+  ],
+  "author": "Edwin Sandoval",
+  "license": "ISC",
+  "dependencies": {
+    "exceljs": "^0.6.0"
+  }
+}
