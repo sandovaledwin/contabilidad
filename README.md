@@ -23,7 +23,7 @@ After installing the Docker CLI tool, now you're ready to start working with *co
 ## 2. Install dependencies.
 In order to execute this project you must install the *exceljs* npm package
 
-### 2.1 Clone the repository.
+### 2.1 Installing
   ```
   npm run modules
   ```  
