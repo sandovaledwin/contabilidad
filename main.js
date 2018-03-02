@@ -7,10 +7,6 @@ var fileName = "./input/gaviotas-contabilidad.xlsx"
 var output    = [];
 var houseId   = 1;
 var houseName = "SAN VICENTE";
-var sueldos   = 0;
-var ingresos  = 0;
-var abarrotes  = 0;
-var luz  = 0;
 
 //[null,"CASA","MES","CONCEPTO","NOCHES DE HOSPEDAJE","TOTAL DE PERSONAS","FECHA","INGRESOS","EGRESOS","TOTAL"]
 
@@ -23,7 +19,7 @@ workbook.xlsx.readFile( fileName )
 
     if( rowNumber > 1 ){
 
-      var expense  = {
+      var transaction  = {
         "id" : 1,
         "house" : "",
         "description" : "",
@@ -34,39 +30,38 @@ workbook.xlsx.readFile( fileName )
       };
 
       //console.log('Row ' + rowNumber + ' = ' , JSON.stringify(row.values) );
-      //console.log('Expense = ' , row.getCell( 8 ).value );
+      //console.log('transaction = ' , row.getCell( 8 ).value );
 
       if( row.getCell( 1 ).value ){
 
         houseId             = row.getCell( 1 ).value === 'SAN VICENTE' ? 1 : 2 ;
         houseName           = row.getCell( 1 ).value;
 
-        expense.description = row.getCell( 3 ).value;
-        expense.amount      = row.getCell( 7 ).value;
-        expense.date        = row.getCell( 6 ).value;
-        expense.type        = "ingreso";
-        expense.category    = "renta";
-        expense.house       = houseName;
-        expense.id          = houseId;
-        ingresos           += row.getCell( 7 ).value;
+        transaction.description = row.getCell( 3 ).value;
+        transaction.amount      = row.getCell( 7 ).value;
+        transaction.date        = row.getCell( 6 ).value;
+        transaction.type        = "ingreso";
+        transaction.category    = "renta";
+        transaction.house       = houseName;
+        transaction.id          = houseId;
 
       }
 
-      // validation of expenses
+      // validation of transactions
       if( row.getCell( 8 ).value || row.getCell( 8 ).value == 0 ){
 
-        expense.description = row.getCell( 3 ).value;
-        expense.amount      = row.getCell( 8 ).value;
-        expense.date        = row.getCell( 6 ).value;
-        expense.house       = houseName;
-        expense.id          = houseId;
+        transaction.description = row.getCell( 3 ).value;
+        transaction.amount      = row.getCell( 8 ).value;
+        transaction.date        = row.getCell( 6 ).value;
+        transaction.house       = houseName;
+        transaction.id          = houseId;
 
         if( row.getCell( 3 ).value.toLowerCase().indexOf( "marsella" ) > -1 ){
-          expense.house     = "MARSELLA";
+          transaction.house     = "MARSELLA";
         }
 
         if( row.getCell( 3 ).value.toLowerCase().indexOf( "san vicente" ) > -1 ){
-          expense.house     = "SAN VICENTE";
+          transaction.house     = "SAN VICENTE";
         }
 
         if( row.getCell( 3 ).value.toLowerCase().indexOf( "publicidad"  ) > -1 ||
@@ -77,48 +72,45 @@ workbook.xlsx.readFile( fileName )
             row.getCell( 3 ).value.toLowerCase().indexOf( "dominio"     ) > -1 ||
             row.getCell( 3 ).value.toLowerCase().indexOf( "clasificado" ) > -1 ||
             row.getCell( 3 ).value.toLowerCase().indexOf( "hosting"     ) > -1 ){
-          expense.category  = "marketing";
+          transaction.category  = "marketing";
         }
 
         if( row.getCell( 3 ).value.toLowerCase().indexOf( "agua" ) > -1 ){
-          expense.category  = "agua";
+          transaction.category  = "agua";
         }
 
         if( row.getCell( 3 ).value.toLowerCase().indexOf( "luz" ) > -1 ){
-          expense.category  = "luz";
-          luz += row.getCell( 8 ).value;
+          transaction.category  = "luz";
         }
 
         if( row.getCell( 3 ).value.toLowerCase().indexOf( "lavado"   ) > -1 ){
-          expense.category  = "lavanderia";
+          transaction.category  = "lavanderia";
         }
 
         if( row.getCell( 3 ).value.toLowerCase().indexOf( "limpieza"   ) > -1 ){
-          expense.category  = "limpieza_casa";
+          transaction.category  = "limpieza_casa";
         }
 
         if( row.getCell( 3 ).value.toLowerCase().indexOf( "admin"     ) > -1 ||
             row.getCell( 3 ).value.toLowerCase().indexOf( "aguinaldo" ) > -1 ||
             row.getCell( 3 ).value.toLowerCase().indexOf( "apoyo"     ) > -1 ||
             row.getCell( 3 ).value.toLowerCase().indexOf( "bono"      ) > -1 ){
-          expense.category  = "sueldos";
-          sueldos += row.getCell( 8 ).value;
+          transaction.category  = "sueldos";
         }
 
         if( row.getCell( 3 ).value.toLowerCase().indexOf( "gas"   ) > -1 ){
-          expense.category  = "gas";
+          transaction.category  = "gas";
         }
 
         if( row.getCell( 3 ).value.toLowerCase().indexOf( "impuesto"    ) > -1 ){
-          expense.category  = "impuestos";
+          transaction.category  = "impuestos";
         }
 
         if( row.getCell( 3 ).value.toLowerCase().indexOf( "papel"       ) > -1 ||
             row.getCell( 3 ).value.toLowerCase().indexOf( "consumibles" ) > -1 ||
             row.getCell( 3 ).value.toLowerCase().indexOf( "trapeadores" ) > -1 ||
             row.getCell( 3 ).value.toLowerCase().indexOf( "abarrotes"   ) > -1){
-          expense.category  = "abarrotes";
-          abarrotes += row.getCell( 8 ).value;
+          transaction.category  = "abarrotes";
         }
 
         if( row.getCell( 3 ).value.toLowerCase().indexOf( "instalación"     ) > -1 ||
@@ -137,16 +129,16 @@ workbook.xlsx.readFile( fileName )
             row.getCell( 3 ).value.toLowerCase().indexOf( "pila"            ) > -1 ||
             row.getCell( 3 ).value.toLowerCase().indexOf( "mano de obra"    ) > -1 ||            
             row.getCell( 3 ).value.toLowerCase().indexOf( "reparación"      ) > -1 ){
-          expense.category  = "mantenimiento";
+          transaction.category  = "mantenimiento";
         }
 
         if( row.getCell( 3 ).value.toLowerCase().indexOf( "cuota" ) > -1 ){
-          expense.category  = "cuota_coto";
+          transaction.category  = "cuota_coto";
         }        
 
         if( row.getCell( 3 ).value.toLowerCase().indexOf( "vtv"     ) > -1 ||
             row.getCell( 3 ).value.toLowerCase().indexOf( "cable"   ) > -1 ){
-          expense.category  = "television";
+          transaction.category  = "television";
         }
 
         if( row.getCell( 3 ).value.toLowerCase().indexOf( "juego de sabanas"     ) > -1 ||
@@ -165,25 +157,17 @@ workbook.xlsx.readFile( fileName )
             row.getCell( 3 ).value.toLowerCase().indexOf( "muebles coppel"       ) > -1 ||
             row.getCell( 3 ).value.toLowerCase().indexOf( "sofa cama para"       ) > -1 ||
             row.getCell( 3 ).value.toLowerCase().indexOf( "juego de toallas"     ) > -1 ){
-              expense.category  = "equipamiento";
+              transaction.category  = "equipamiento";
             }
 
       }
 
-      output.push( expense );
+      output.push( transaction );
 
-      //console.log( expense );
+      //console.log( transaction );
 
 
       if( rowNumber == worksheet.rowCount ){
-        
-        //console.log( output );
-        /** 
-        console.log( "Total de Ingresos: $", ingresos );
-        console.log( "Total de Sueldos Pagados: $", sueldos );
-        console.log( "Total Gastado en Abarrotes: $", abarrotes );
-        console.log( "Total Gastado en Luz: $", luz );
-        **/
 
         fs.writeFile( "./output/results.json", JSON.stringify( output ), function( err ) {
           
