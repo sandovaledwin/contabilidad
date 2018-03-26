@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+    <head>
+        <title>Reporte de Ingresos y Gastos Mensuales</title>
+        <script src="output/ingresosGastosMensuales.js" type="text/javascript"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js" type="text/javascript"></script>
+    </head>
+<body>
+    
+    <div class="chart-container" style="position: relative; height:800px; width:800px">
+        <canvas id="myChart"></canvas>
+    </div>    
+
+    <script>
+
+    Number.prototype.formatMoney = function(c, d, t){
+    var n = this, 
+        c = isNaN(c = Math.abs(c)) ? 2 : c, 
+        d = d == undefined ? "." : d, 
+        t = t == undefined ? "," : t, 
+        s = n < 0 ? "-" : "", 
+        i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))), 
+        j = (j = i.length) > 3 ? j % 3 : 0;
+    return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+    };        
+
+    window.chartColors = {
+        red: 'rgb(255, 99, 132)',
+        orange: 'rgb(255, 159, 64)',
+        yellow: 'rgb(255, 205, 86)',
+        green: 'rgb(75, 192, 192)',
+        blue: 'rgb(54, 162, 235)',
+        purple: 'rgb(153, 102, 255)',
+        grey: 'rgb(201, 203, 207)'
+    };
+
+    var ctx = document.getElementById("myChart").getContext('2d');
+
+    var color = Chart.helpers.color;
+
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: [ 
+                "Enero", 
+                "Febrero", 
+                "Marzo",
+                "Abril",
+                "Mayo",
+                "Junio",
+                "Julio",
+                "Agosto",
+                "Septiembre",
+                "Octubre",
+                "Noviembre",
+                "Diciembre"
+            ],
+            datasets: [
+                {
+                    label: '# Ingresos',
+                    data: ingresos,
+                    backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
+				    borderColor: window.chartColors.blue,
+                    borderWidth: 1
+                },
+                {
+                    label: '# Gastos',
+                    data: gastos,
+                    backgroundColor: color(window.chartColors.red).alpha(0.5).rgbString(),
+				    borderColor: window.chartColors.red,
+                    borderWidth: 1
+                }                
+            ]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            },
+            title: {
+                display: true,
+                text: "Reporte " + year + " Ingresos[ $ " + ingresos.reduce( function( a, b ){ return a + b; }).formatMoney(2, '.', ',') + " ] Egresos[ $" + gastos.reduce( function( a, b ){ return a + b; }).formatMoney(2, '.', ',') + " ]" 
+            }            
+        }
+    });
+    </script>
+</body></html>

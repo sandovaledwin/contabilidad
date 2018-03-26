@@ -6,6 +6,7 @@
   "scripts": {
     "start":  "node main.js",
     "report": "node totales.js",
+    "mensual": "node mensual.js",
     "modules": "npm install"
   },
   "keywords": [
